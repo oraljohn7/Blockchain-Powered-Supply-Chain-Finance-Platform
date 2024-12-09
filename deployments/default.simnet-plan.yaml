@@ -50,6 +50,16 @@ plan:
     - id: 0
       transactions:
         - emulated-contract-publish:
+            contract-name: automated-payment
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/automated-payment.clar
+            clarity-version: 2
+        - emulated-contract-publish:
+            contract-name: credit-scoring
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/credit-scoring.clar
+            clarity-version: 2
+        - emulated-contract-publish:
             contract-name: invoice-token
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/invoice-token.clar

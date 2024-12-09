@@ -10,6 +10,11 @@ path = 'contracts/automated-payment.clar'
 clarity_version = 2
 epoch = 2.5
 
+[contracts.credit-scoring]
+path = 'contracts/credit-scoring.clar'
+clarity_version = 2
+epoch = 2.5
+
 [contracts.invoice-token]
 path = 'contracts/invoice-token.clar'
 clarity_version = 2
