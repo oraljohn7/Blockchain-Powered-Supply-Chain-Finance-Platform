@@ -32,14 +32,12 @@
   (let
     (
       (invoice-id (+ (var-get last-invoice-id) u1))
-      (issuer tx-sender)
     )
-    (try! (ft-mint? invoice-token amount issuer))
     (map-set invoices
       { invoice-id: invoice-id }
       {
         amount: amount,
-        issuer: issuer,
+        issuer: tx-sender,
         payer: payer,
         due-date: due-date,
         status: "pending"
@@ -54,14 +52,14 @@
   (let
     (
       (invoice (unwrap! (map-get? invoices { invoice-id: invoice-id }) (err u404)))
-      (amount (get amount invoice))
     )
     (asserts! (is-eq (get issuer invoice) tx-sender) (err u403))
-    (try! (ft-transfer? invoice-token amount tx-sender recipient))
-    (ok (map-set invoices
+    (asserts! (is-eq (get status invoice) "pending") (err u400))
+    (map-set invoices
       { invoice-id: invoice-id }
       (merge invoice { issuer: recipient })
-    ))
+    )
+    (ok true)
   )
 )
 
@@ -69,17 +67,15 @@
   (let
     (
       (invoice (unwrap! (map-get? invoices { invoice-id: invoice-id }) (err u404)))
-      (amount (get amount invoice))
-      (issuer (get issuer invoice))
     )
     (asserts! (is-eq (get payer invoice) tx-sender) (err u403))
     (asserts! (is-eq (get status invoice) "pending") (err u400))
-    (try! (stx-transfer? amount tx-sender issuer))
-    (try! (ft-burn? invoice-token amount issuer))
-    (ok (map-set invoices
+    (try! (stx-transfer? (get amount invoice) tx-sender (get issuer invoice)))
+    (map-set invoices
       { invoice-id: invoice-id }
       (merge invoice { status: "paid" })
-    ))
+    )
+    (ok true)
   )
 )
 
